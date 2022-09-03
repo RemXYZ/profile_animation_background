@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" style="display: block;">Canvas is not supported :(</canvas>
+
+    <script>
+        let canv = document.querySelector("#canvas"),
+        ctx = canv.getContext('2d')
+
+
+        canv.width = window.innerWidth
+        canv.height = window.innerHeight
+        
+
+        ctx.fillStyle = '#c15151';
+        ctx.lineWidth = 3
+        
+        ctx.beginPath();
+        ctx.moveTo(50*2,50*2);
+        ctx.lineTo(25*2, 100*2);
+        ctx.lineTo(25*2, 100*2);
+        ctx.lineTo(25*2, 100*2);
+        ctx.stroke();
+
+        // ctx.beginPath();
+        // ctx.arc(canv.width / 2, canv.height / 2, 100, 0, Math.PI * 2)
+        // ctx.fill()
+
+    </script>
+</body>
+</html>
