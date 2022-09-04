@@ -16,29 +16,91 @@
 <body>
     <canvas id="canvas" style="display: block;">Canvas is not supported :(</canvas>
 
-    <script>
-        let canv = document.querySelector("#canvas"),
-        ctx = canv.getContext('2d')
+<script>
+    class MyCanvas {
+        constructor(root) {
+            this.canv = document.querySelector(root),
+            this.ctx = this.canv.getContext('2d');
+            this.maxW = window.innerWidth;
+            this.maxH = window.innerHeight;
+        }
 
-
-        canv.width = window.innerWidth
-        canv.height = window.innerHeight
+        setCanvasSize(){
+            this.canv.width = this.maxW
+            this.canv.height = this.maxH
+        }
         
+        getCanvas() {
+            return this.ctx
+        }
 
-        ctx.fillStyle = '#c15151';
-        ctx.lineWidth = 3
-        
-        ctx.beginPath();
-        ctx.moveTo(50*2,50*2);
-        ctx.lineTo(25*2, 100*2);
-        ctx.lineTo(25*2, 100*2);
-        ctx.lineTo(25*2, 100*2);
-        ctx.stroke();
+        getCanvasSize() {
+            return {w: this.maxW, h:this.maxH}
+        }
+    }
 
-        // ctx.beginPath();
-        // ctx.arc(canv.width / 2, canv.height / 2, 100, 0, Math.PI * 2)
-        // ctx.fill()
+    canv = new MyCanvas("#canvas")
+    canv.setCanvasSize()
+    let ctx = canv.getCanvas(),
+    ctxSize = canv.getCanvasSize()
 
-    </script>
+    
+    
+    
+    const linesNum = Math.floor((Math.random() * 15-7)) + 7
+
+    ctx.fillStyle = '#c15151';
+    ctx.lineWidth = 3
+    ctx.beginPath();
+    ctx.moveTo(50,0);
+    ctx.lineTo(600, 100);
+    ctx.stroke();
+
+    function generateLinePath(size) {
+        let angleBorders = [180+20, 0-20],
+        curves = Math.floor((Math.random() * 4)) + 1
+        console.log(curves)
+
+        let distance, 
+        x = Math.floor((Math.random() * size.w)), 
+        y = 0
+        for(let i = 0; i < curves; i++) {
+            // unique angle for start and for end
+            if (i == 0 || i == curves - 1) {
+                var newAngleBorders = [150, 30]
+            }
+
+            // calculate random angle
+            let angle = Math.floor(Math.random() * (newAngleBorders[0] - newAngleBorders[1])) + newAngleBorders[1]
+            // return normal angle border
+            newAngleBorders = angleBorders
+            
+            // calculate distance from x to height of canvas
+            console.log(Math.tan(angle))
+            x1 = size.h / Math.tan(angle) + x
+            distance = Math.sqrt(Math.pow(x1 - x, 2) + Math.pow(size.h - y, 2))
+
+            if (angle <= 0 || angle >= 180) {
+
+            }else {
+                
+            }
+            console.log(angle, x + " x", x1+ " x1", y, distance)
+        }
+
+    }
+    generateLinePath(ctxSize)
+
+    // ctx.globalCompositeOperation='destination-over';
+    // ctx.globalCompositeOperation='source-over';
+
+    // ctx.beginPath();
+    // ctx.arc(500, 200, 100, 0, Math.PI * 2)
+    // ctx.fill()
+
+    
+    
+
+</script>
 </body>
 </html>
