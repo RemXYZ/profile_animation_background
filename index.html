@@ -141,8 +141,12 @@ class CurvePlus{
     }
 
 
-    calculateDistance(angle, size, coord) {
+    calculateDistance(angle, size, i) {
         let
+        coord = {
+            "x": this.coords.x[i],
+            "y": this.coords.y[i]
+        },
         // distance by sinus
         distanceSin, 
         // distance by cosinus
@@ -151,47 +155,68 @@ class CurvePlus{
         distanceF
 
         
-        distanceSin = size.h / Math.sin((angle * Math.PI) / 180 )
+        distanceSin = size.h - coord.y / Math.sin((angle * Math.PI) / 180 )
 
 
-        // Calculatinmg distance to left border
-        // if (angle >= 90) {
-        //     distanceCos = Math.cos(180 - angle)
-        // }
-        // distanceCos = angle >= 90 ? size.w - coord.x : coord.x
-        // distanceCos /= Math.abs(Math.cos(angle))
+        // Calculating distance to left and right border
+        if (angle >= 90) {
+            distanceCos = size.w - coord.x
+        } else if (angle < 90) {
+            distanceCos = coord.x
+        }
+        distanceCos /= Math.abs(Math.cos(angle))
+
+        if (distanceSin > distanceCos ) {
+            distanceF = distanceCos / this.curves
+        } else {
+            distanceF = distanceSin / this.curves
+        }
+
+        // distanceF = distanceSin > distanceCos ? distanceCos / this.curves : distanceSin / this.curves
         
-        distanceF = distanceSin / this.curves
+        console.log(angle, coord.x + "x", coord.y +" y", distanceSin, distanceCos, distanceF)
         return distanceF;
-        // console.log(angle, coord.x + "x", coord.y +" y", distanceSin, distanceCos, distanceF)
     }
 
 
-    calculateDotCoord(angleBorder, size, coord) {
+    calculateDotCoord(angleBorder, size, i) {
         let
+        coord = {
+            "x": this.coords.x[i],
+            "y": this.coords.y[i]
+        },
         angle = this.calculateRandomAngle(angleBorder),
-        distance = this.calculateDistance(angle, size, coord);
+        distance = this.calculateDistance(angle, size, i);
+
+
         
         let x = angle >= 90 ? coord.x + distance * Math.abs(Math.cos((180 - angle) * Math.PI / 180)) : coord.x - distance * Math.abs(Math.cos(angle * Math.PI / 180))
         let y = angle >= 90 ? distance * Math.abs(Math.sin((180 - angle) * Math.PI / 180)) : distance * Math.abs(Math.sin(angle * Math.PI / 180))
         console.log(x +"x", y +"y", distance, angle, coord)
         ctx.lineTo(x,y);
+        return {x,y}
 
     }
 
 
     generateLinePath(size) {
         let angleBorders = [180+20, 0-20],
-        curves = getRandomInc(4, 1),
-        coord = {
-            "x": getRandomInc(size.w, 0),
-            "y": 0
+        curves = getRandomInc(4, 1)
+        this.coords = {
+            "x": [getRandomInc(size.w, 0)],
+            "y": [0]
         }
         this.curves = curves
-        ctx.beginPath();
-        ctx.moveTo(coord.x,0);
+        
 
-        this.calculateDotCoord([130,80], size, coord)
+        ctx.beginPath();
+        ctx.moveTo(this.coords.x[0],this.coords.y[0]);
+
+        let coord = this.calculateDotCoord([120,120], size, 0)
+        this.coords.x.push(coord.x)
+        this.coords.y.push(coord.y)
+        coord = this.calculateDotCoord([120,120], size, 1)
+
         ctx.stroke();
 
         // for(let i = 0; i < curves; i++) {
@@ -202,7 +227,7 @@ class CurvePlus{
         //     this.calculateDotCoord(newAngleBorders, size, coord)
         //     newAngleBorders = angleBorders
         // }
-        console.log(curves)
+        // console.log(curves)
     }
 }
 
