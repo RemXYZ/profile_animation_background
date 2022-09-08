@@ -155,26 +155,31 @@ class CurvePlus{
         distanceF
 
         
-        distanceSin = size.h - coord.y / Math.sin((angle * Math.PI) / 180 )
+        if (angle < 180) {
+            distanceSin = (size.h - coord.y) / Math.sin((angle * Math.PI) / 180)
+        }else {
+            distanceSin = coord.y / Math.abs(Math.sin((angle * Math.PI) / 180))
+        }
+        
 
 
         // Calculating distance to left and right border
-        if (angle >= 90) {
-            distanceCos = size.w - coord.x
-        } else if (angle < 90) {
-            distanceCos = coord.x
+        if (angle >= 90 && angle <= 270) {
+            distanceCos = (size.w - coord.x) / Math.abs(Math.cos((angle* Math.PI) / 180))
+        } else {
+            distanceCos = coord.x / Math.abs(Math.cos((angle* Math.PI) / 180))
         }
-        distanceCos /= Math.abs(Math.cos(angle))
 
         if (distanceSin > distanceCos ) {
-            distanceF = distanceCos / this.curves
+            distanceF = distanceCos / (this.curves - i)
         } else {
-            distanceF = distanceSin / this.curves
+            console.log("ggg")
+            distanceF = distanceSin / (this.curves - i)
         }
 
         // distanceF = distanceSin > distanceCos ? distanceCos / this.curves : distanceSin / this.curves
         
-        console.log(angle, coord.x + "x", coord.y +" y", distanceSin, distanceCos, distanceF)
+        console.log(this.curves, angle, coord.x + "x", coord.y +" y", distanceSin, distanceCos, distanceF)
         return distanceF;
     }
 
@@ -190,10 +195,17 @@ class CurvePlus{
 
 
         
-        let x = angle >= 90 ? coord.x + distance * Math.abs(Math.cos((180 - angle) * Math.PI / 180)) : coord.x - distance * Math.abs(Math.cos(angle * Math.PI / 180))
-        let y = angle >= 90 ? distance * Math.abs(Math.sin((180 - angle) * Math.PI / 180)) : distance * Math.abs(Math.sin(angle * Math.PI / 180))
+        // let x = angle >= 90 ? 
+        //     coord.x + distance * Math.abs(Math.cos((angle) * Math.PI / 180)) : 
+        //     coord.x - distance * Math.abs(Math.cos(angle * Math.PI / 180))
+        // let y = angle <= 180 ? 
+        //     coord.y + distance * Math.abs(Math.sin(angle * Math.PI / 180)) : 
+        //     coord.y - distance * Math.abs(Math.sin(angle * Math.PI / 180))
+
+        let x = coord.x + (-1 * distance * Math.cos(angle * Math.PI / 180))
+        let y = coord.y + distance * Math.sin(angle * Math.PI / 180)
         console.log(x +"x", y +"y", distance, angle, coord)
-        ctx.lineTo(x,y);
+        
         return {x,y}
 
     }
@@ -207,26 +219,37 @@ class CurvePlus{
             "y": [0]
         }
         this.curves = curves
-        
 
         ctx.beginPath();
         ctx.moveTo(this.coords.x[0],this.coords.y[0]);
 
-        let coord = this.calculateDotCoord([120,120], size, 0)
-        this.coords.x.push(coord.x)
-        this.coords.y.push(coord.y)
-        coord = this.calculateDotCoord([120,120], size, 1)
+        // let coord = this.calculateDotCoord([100,90], size, 0)
+        // this.coords.x.push(coord.x)
+        // this.coords.y.push(coord.y)
+        // ctx.lineTo(coord.x,coord.y);
+        // coord = this.calculateDotCoord([80,30], size, 1)
+        // this.coords.x.push(coord.x)
+        // this.coords.y.push(coord.y)
+        // ctx.lineTo(coord.x,coord.y);
+        // coord = this.calculateDotCoord([80,30], size, 2)
+        // this.coords.x.push(coord.x)
+        // this.coords.y.push(coord.y)
+        // ctx.lineTo(coord.x,coord.y);
 
+        
+
+        for(let i = 0; i < curves; i++) {
+            //unique angle for start and for end
+            if (i == 0 || i == curves - 1) {
+                var newAngleBorders = [150, 30]
+            }
+            let coord = this.calculateDotCoord(newAngleBorders, size, i)
+            this.coords.x.push(coord.x)
+            this.coords.y.push(coord.y)
+            ctx.lineTo(coord.x,coord.y);
+            // newAngleBorders = angleBorders
+        }
         ctx.stroke();
-
-        // for(let i = 0; i < curves; i++) {
-        //     //unique angle for start and for end
-        //     if (i == 0 || i == curves - 1) {
-        //         var newAngleBorders = [150, 30]
-        //     }
-        //     this.calculateDotCoord(newAngleBorders, size, coord)
-        //     newAngleBorders = angleBorders
-        // }
         // console.log(curves)
     }
 }
@@ -297,9 +320,9 @@ class CurvePlus{
     // ctx.globalCompositeOperation='destination-over';
     // ctx.globalCompositeOperation='source-over';
 
-    ctx.beginPath();
-    ctx.arc(0, 200, 100, 0, Math.PI * 2)
-    ctx.fill()
+    // ctx.beginPath();
+    // ctx.arc(0, 200, 100, 0, Math.PI * 2)
+    // ctx.fill()
 
     
     
