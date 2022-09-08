@@ -16,7 +16,9 @@
 <body>
     <canvas id="canvas" style="display: block;">Canvas is not supported :(</canvas>
 
-<script src="line_generator_algorithm.js"></script>
+    <!-- line_generator_algorithm -->
+<script src="CurvePlus.js"></script>
+<script src="MyCanvas.js"></script>
 
 <script>
 
@@ -26,27 +28,7 @@
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    class MyCanvas {
-        constructor(root) {
-            this.canv = document.querySelector(root),
-            this.ctx = this.canv.getContext('2d');
-            this.maxW = window.innerWidth;
-            this.maxH = window.innerHeight;
-        }
-
-        setCanvasSize(){
-            this.canv.width = this.maxW
-            this.canv.height = this.maxH
-        }
-        
-        getCanvas() {
-            return this.ctx
-        }
-
-        getCanvasSize() {
-            return {w: this.maxW, h:this.maxH}
-        }
-    }
+    
 
     canv = new MyCanvas("#canvas")
     canv.setCanvasSize()
@@ -60,7 +42,7 @@
 
     ctx.fillStyle = '#c15151';
     ctx.lineWidth = 3
-    
+
     let curve = new CurvePlus(ctx)
     curve.generateLinePath(ctxSize)
 
