@@ -16,7 +16,16 @@
 <body>
     <canvas id="canvas" style="display: block;">Canvas is not supported :(</canvas>
 
+<script src="line_generator_algorithm.js"></script>
+
 <script>
+
+    function getRandomInc(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
     class MyCanvas {
         constructor(root) {
             this.canv = document.querySelector(root),
@@ -49,276 +58,12 @@
     
     const linesNum = Math.floor((Math.random() * 15-7)) + 7
 
-    class CurvePlus1 {
-        constructor(ctx) {
-            this.ctx = ctx
-        }
-
-        generateDotArea(x, y, size, ratio, i) {
-            // console.log(x,y)
-            let
-            dx = ((Math.random() * 1 - 0.3) + 0.3) * ratio,
-            dy = ((Math.random() * 1 - 0.3) + 0.3) * ratio,
-            boxCoord = {"top": y - (dy/2), "bottom": y + dy, "left": x - dx, "right": x + dx}
-            if (boxCoord.top < 0) {
-                boxCoord.top = 0
-            }
-            if (boxCoord.bottom > size.h) {
-                boxCoord.bottom = size.h
-            }
-            if (boxCoord.left < 0 ) {
-                boxCoord.left = 0
-            }
-            if (boxCoord.right > size.w) {
-                boxCoord.right = size.w
-            }
-
-
-            if (i == 0) {
-                boxCoord.top = size.h * (Math.random() * (0.2 - 0.1)) + 0.1
-            }
-            
-            console.log(i, dx, dy, ratio, boxCoord)
-            return boxCoord;
-
-        }
-
-        generateLinePath(size) {
-            let
-            curves = Math.floor((Math.random() * 4)) + 1,
-            xs = [Math.floor((Math.random() * size.w))], 
-            ys = [0],
-            ratio = size.w / curves,
-            x = xs[0],
-            y = ys[0]
-
-            ctx.beginPath();
-            ctx.moveTo(x,y);
-            for(let i = 0; i < curves; i++) {
-
-                let area = this.generateDotArea(x, y, size, ratio, i);
-                x = area.left + (Math.random() * (area.right - area.left))
-                y = area.top + (Math.random() * (area.bottom - area.top))
-                ctx.lineTo(x, y);
-                xs.push(x)
-                ys.push(y)
-                console.log(x, y, curves)
-            }
-            ctx.stroke();
-        }
-    }
     ctx.fillStyle = '#c15151';
     ctx.lineWidth = 3
-    // ctx.beginPath();
-    // ctx.moveTo(50,0);
-    // ctx.lineTo(600, 100);
-    // ctx.stroke();
-
-    let curve1 = new CurvePlus1(ctx)
-    // curve.generateLinePath(ctxSize)
-
-
-    function getRandomInc(min, max) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min + 1)) + min; //Максимум и минимум включаются
-    }
-
-
-class CurvePlus{
-    constructor(ctx) {
-            this.ctx = ctx
-        }
-
-
-    calculateRandomAngle(angleBorder) {
-        // calculate random angle
-        let angle = getRandomInc(angleBorder[0], angleBorder[1])
-
-        // if angle is negative, e.g. -18 -> 342
-        angle = angle < 0 ? angle + 360 : angle
-        return angle
-    }
-
-
-    calculateDistance(angle, size, i) {
-        let
-        coord = {
-            "x": this.coords.x[i],
-            "y": this.coords.y[i]
-        },
-        // distance by sinus
-        distanceSin, 
-        // distance by cosinus
-        distanceCos,
-        // final distance (with random)
-        distanceF
-
-        
-        if (angle < 180) {
-            distanceSin = (size.h - coord.y) / Math.sin((angle * Math.PI) / 180)
-        }else {
-            distanceSin = coord.y / Math.abs(Math.sin((angle * Math.PI) / 180))
-        }
-        
-
-
-        // Calculating distance to left and right border
-        if (angle >= 90 && angle <= 270) {
-            distanceCos = (size.w - coord.x) / Math.abs(Math.cos((angle* Math.PI) / 180))
-        } else {
-            distanceCos = coord.x / Math.abs(Math.cos((angle* Math.PI) / 180))
-        }
-
-        if (distanceSin > distanceCos ) {
-            distanceF = distanceCos / (this.curves - i)
-        } else {
-            console.log("ggg")
-            distanceF = distanceSin / (this.curves - i)
-        }
-
-        // distanceF = distanceSin > distanceCos ? distanceCos / this.curves : distanceSin / this.curves
-        
-        console.log(this.curves, angle, coord.x + "x", coord.y +" y", distanceSin, distanceCos, distanceF)
-        return distanceF;
-    }
-
-
-    calculateDotCoord(angleBorder, size, i) {
-        let
-        coord = {
-            "x": this.coords.x[i],
-            "y": this.coords.y[i]
-        },
-        angle = this.calculateRandomAngle(angleBorder),
-        distance = this.calculateDistance(angle, size, i);
-
-
-        
-        // let x = angle >= 90 ? 
-        //     coord.x + distance * Math.abs(Math.cos((angle) * Math.PI / 180)) : 
-        //     coord.x - distance * Math.abs(Math.cos(angle * Math.PI / 180))
-        // let y = angle <= 180 ? 
-        //     coord.y + distance * Math.abs(Math.sin(angle * Math.PI / 180)) : 
-        //     coord.y - distance * Math.abs(Math.sin(angle * Math.PI / 180))
-
-        let x = coord.x + (-1 * distance * Math.cos(angle * Math.PI / 180))
-        let y = coord.y + distance * Math.sin(angle * Math.PI / 180)
-        console.log(x +"x", y +"y", distance, angle, coord)
-        
-        return {x,y}
-
-    }
-
-
-    generateLinePath(size) {
-        let angleBorders = [180+20, 0-20],
-        curves = getRandomInc(4, 1)
-        this.coords = {
-            "x": [getRandomInc(size.w, 0)],
-            "y": [0]
-        }
-        this.curves = curves
-
-        ctx.beginPath();
-        ctx.moveTo(this.coords.x[0],this.coords.y[0]);
-
-        // let coord = this.calculateDotCoord([100,90], size, 0)
-        // this.coords.x.push(coord.x)
-        // this.coords.y.push(coord.y)
-        // ctx.lineTo(coord.x,coord.y);
-        // coord = this.calculateDotCoord([80,30], size, 1)
-        // this.coords.x.push(coord.x)
-        // this.coords.y.push(coord.y)
-        // ctx.lineTo(coord.x,coord.y);
-        // coord = this.calculateDotCoord([80,30], size, 2)
-        // this.coords.x.push(coord.x)
-        // this.coords.y.push(coord.y)
-        // ctx.lineTo(coord.x,coord.y);
-
-        
-
-        for(let i = 0; i < curves; i++) {
-            //unique angle for start and for end
-            if (i == 0 || i == curves - 1) {
-                var newAngleBorders = [150, 30]
-            }
-            let coord = this.calculateDotCoord(newAngleBorders, size, i)
-            this.coords.x.push(coord.x)
-            this.coords.y.push(coord.y)
-            ctx.lineTo(coord.x,coord.y);
-            // newAngleBorders = angleBorders
-        }
-        ctx.stroke();
-        // console.log(curves)
-    }
-}
-
+    
     let curve = new CurvePlus(ctx)
-    // curve.generateLinePath(ctxSize)
     curve.generateLinePath(ctxSize)
 
-
-
-
-
-
-    // function generateLinePath(size) {
-    //     let angleBorders = [180+20, 0-20],
-    //     curves = Math.floor((Math.random() * 4)) + 1
-    //     console.log(curves)
-
-    //     let distanceSin, 
-    //     distanceCos,
-    //     distanceF,
-    //     x = Math.floor((Math.random() * size.w)), 
-    //     y = 0
-        
-    //     // console.log()
-    //     // ctx.beginPath();
-    //     // ctx.moveTo(x,y);
-    //     // console.log(x)
-    //     for(let i = 0; i < curves; i++) {
-    //         // unique angle for start and for end
-    //         if (i == 0 || i == curves - 1) {
-    //             var newAngleBorders = [150, 30]
-    //         }
-
-    //         // calculate random angle
-    //         let angle = Math.floor(Math.random() * (newAngleBorders[0] - newAngleBorders[1])) + newAngleBorders[1]
-    //         // if angle is negative, e.g. -18 -> 342
-    //         angle = angle < 0 ? angle + 360 : angle
-    //         // return normal angle border
-    //         newAngleBorders = angleBorders
-            
-    //         // calculate distance from x to border of canvas
-    //         if (angle > 0 && angle <= 180) {
-    //             distanceSin = size.h / Math.sin((angle * Math.PI) / 180 )
-    //             distanceCos = angle >= 90 ? size.w - x : x
-    //             distanceCos /= Math.abs(Math.cos(angle))
-                
-    //             distanceF = distanceSin / curves - i
-    //             if (distanceCos < distanceSin && distanceF > distanceCos ) {
-    //                 distanceF = distanceCos
-    //             }
-
-    //             x = angle >= 90 ? Math.cos((180 - angle) * Math.PI / 180) : Math.cos(angle * Math.PI / 180)
-    //             x = distanceF / x
-    //             y = angle >= 90 ? Math.sin((180 - angle) * Math.PI / 180) : Math.sin(angle * Math.PI / 180)
-    //             y = distanceF / y
-                
-    //         }else {
-                
-    //         }
-    //         // ctx.lineTo(x, y);
-    //         console.log(angle, x + "x", y +" y", distanceSin, distanceCos, distanceF)
-    //     }
-    //     // ctx.stroke();
-    // }
-    // generateLinePath(ctxSize)
-
-    // ctx.globalCompositeOperation='destination-over';
-    // ctx.globalCompositeOperation='source-over';
 
     // ctx.beginPath();
     // ctx.arc(0, 200, 100, 0, Math.PI * 2)
