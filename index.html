@@ -11,6 +11,9 @@
             padding: 0;
             box-sizing: border-box;
         }
+        body {
+            background: #3E3E3E;
+        }
     </style>
 </head>
 <body>
@@ -19,6 +22,7 @@
     <!-- line_generator_algorithm -->
 <script src="CurvePlus.js"></script>
 <script src="MyCanvas.js"></script>
+<script src="RectPlus.js"></script>
 
 <script>
 
@@ -35,17 +39,49 @@
     let ctx = canv.getCanvas(),
     ctxSize = canv.getCanvasSize()
 
+    // ctx.fillStyle = "#3E3E3E";
+    // ctx.fillRect(0, 0, ctxSize.w, ctxSize.h);
     
     
     
     const linesNum = Math.floor((Math.random() * 15-7)) + 7
 
+    let block1 = new RectPlus(ctx, -1*window.innerWidth/2, 0, window.innerWidth/2, window.innerHeight, "#282828")
+    block1.draw()
+    block1.setAnimationFrame({x: 0})
+    let block2 = new RectPlus(ctx, window.innerWidth, 0, window.innerWidth/2, window.innerHeight, "#282828")
+    block2.draw()
+    block2.setAnimationFrame({x: window.innerWidth/2})
+    // block1.animate(100.2);
+    // block1.animate(100.2);
+    // block1.animate(100.2);
+    // block1.animate(100.2);
+    // block1.animate(100.2);
+    // block1.animate(100.2);
+    // block1.animate(100);
+    // block1.animate(100);
+    // block1.animate(100);
+    // block1.animate(100);
+
     ctx.fillStyle = '#c15151';
     ctx.lineWidth = 3
+    ctx.strokeStyle = "#3E3E3E"
+    // let curve = new CurvePlus(ctx)
+    // curve.generateLinePath(ctxSize)
 
-    let curve = new CurvePlus(ctx)
-    curve.generateLinePath(ctxSize)
+    // animation core
+    function render() {
+        ctx.clearRect(0,0,ctxSize.w, ctxSize.h)
+        let time = 15
+        block1.animate(time)
+        block2.animate(time)
+        requestAnimationFrame(render)
+    }
 
+    render()
+    
+
+    // ctx.fillRect(40, 20, 50, 100)
 
     // ctx.beginPath();
     // ctx.arc(0, 200, 100, 0, Math.PI * 2)

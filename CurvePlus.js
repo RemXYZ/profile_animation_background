@@ -73,9 +73,9 @@ class CurvePlus{
 
     generateLinePath(size) {
         let angleBorders = [180+20, 0-20],
-        curves = getRandomInc(4, 1)
+        curves = getRandomInc(5, 1)
         this.coords = {
-            "x": [getRandomInc(size.w, 0)],
+            "x": [getRandomInc(size.w-size.w*0.1, size.w*0.1)],
             "y": [0]
         }
         this.curves = curves
@@ -105,7 +105,7 @@ class CurvePlus{
             this.coords.x.push(coord.x)
             this.coords.y.push(coord.y)
             ctx.lineTo(coord.x,coord.y);
-            // newAngleBorders = angleBorders
+            newAngleBorders = angleBorders
         }
         ctx.stroke();
     }
