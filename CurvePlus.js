@@ -1,12 +1,13 @@
 class CurvePlus{
     constructor(ctx) {
             this.ctx = ctx
+            // this.currCoord = {"x": 0, "y": 0}
         }
 
 
     calculateRandomAngle(angleBorder) {
         // calculate random angle
-        let angle = getRandomInc(angleBorder[0], angleBorder[1])
+        let angle = getRandomInt(angleBorder[0], angleBorder[1])
 
         // if angle is negative, e.g. -18 -> 342
         angle = angle < 0 ? angle + 360 : angle
@@ -47,11 +48,21 @@ class CurvePlus{
         }
 
         // distanceF = distanceSin > distanceCos ? distanceCos / this.curves : distanceSin / this.curves
-        
-        console.log(this.curves, angle, coord.x + "x", coord.y +" y", distanceSin, distanceCos, distanceF)
+        // console.log(this.curves, angle, coord.x + "x", coord.y +" y", distanceSin, distanceCos, distanceF)
+        // console.log(distanceF, this.curves, i)
+        // randomize line distance
+        if (i != this.curves - 1) {
+            distanceF = distanceF + getRandomInt(20, -20) / 100 * distanceF
+        }
+        // console.log(distanceF )
         return distanceF;
     }
 
+    calculateCoordByLine(x, y, angle, distance){
+        x = x + (-1 * distance * Math.cos(angle * Math.PI / 180))
+        y = y + distance * Math.sin(angle * Math.PI / 180)
+        return {x,y}
+    }
 
     calculateDotCoord(angleBorder, size, i) {
         let
@@ -62,26 +73,30 @@ class CurvePlus{
         angle = this.calculateRandomAngle(angleBorder),
         distance = this.calculateDistance(angle, size, i);
 
-        let x = coord.x + (-1 * distance * Math.cos(angle * Math.PI / 180))
-        let y = coord.y + distance * Math.sin(angle * Math.PI / 180)
-        console.log(x +"x", y +"y", distance, angle, coord)
+        this.angles.push(angle)
+        this.distances.push(distance)
+
+        let newCoord = this.calculateCoordByLine(coord.x, coord.y, angle, distance)
+        // console.log(x +"x", y +"y", distance, angle, coord)
         
-        return {x,y}
+        return newCoord
 
     }
 
 
     generateLinePath(size) {
         let angleBorders = [180+20, 0-20],
-        curves = getRandomInc(5, 1)
+        curves = getRandomInt(5, 2)
         this.coords = {
-            "x": [getRandomInc(size.w-size.w*0.1, size.w*0.1)],
+            "x": [getRandomInt(size.w-size.w*0.1, size.w*0.1)],
             "y": [0]
         }
+        this.angles = []
+        this.distances = []
         this.curves = curves
 
-        ctx.beginPath();
-        ctx.moveTo(this.coords.x[0],this.coords.y[0]);
+        // ctx.beginPath();
+        // ctx.moveTo(this.coords.x[0],this.coords.y[0]);
 
         // let coord = this.calculateDotCoord([100,90], size, 0)
         // this.coords.x.push(coord.x)
@@ -104,9 +119,56 @@ class CurvePlus{
             let coord = this.calculateDotCoord(newAngleBorders, size, i)
             this.coords.x.push(coord.x)
             this.coords.y.push(coord.y)
-            ctx.lineTo(coord.x,coord.y);
+            
             newAngleBorders = angleBorders
         }
+    }
+
+
+    draw() {
+        ctx.beginPath();
+        ctx.moveTo(this.coords.x[0],this.coords.y[0]);
+
+        for(let i = 1; i < this.coords.x.length; i++) {
+            ctx.lineTo(this.coords.x[i], this.coords.y[i]);
+        }
+
         ctx.stroke();
+
+        // console.log(this)
+    }
+
+    drawing(pct) {
+        let coords = this.coords
+        let fullDistance = this.distances.reduce((prev, curr)=>curr + prev)
+        // let currCoord = this.currCoord
+        let distance = this.distances[0]
+        console.log(this.distances, fullDistance)
+        // percentage distance
+        let pctDistance = fullDistance * pct
+        console.log(pctDistance)
+        this.ctx.beginPath();
+        this.ctx.moveTo(coords.x[0], coords.y[0]);
+        for(let i = 0; i < this.distances.length; i++) {
+            if (pctDistance <= distance) {
+                pctDistance = this.distances[i] - (distance - pctDistance)
+                let coord = this.calculateCoordByLine(coords.x[i], coords.y[i], this.angles[i], pctDistance)
+                this.ctx.lineTo(coord.x, coord.y)
+                console.log(pctDistance, i, coord)
+                
+                break
+            } else {
+                distance += this.distances[i+1]
+                this.ctx.lineTo(coords.x[i+1], coords.y[i+1])
+                continue
+            }
+        }
+
+        ctx.stroke();
+        // ctx.moveTo(currCoord.x, currCoord.y);
+    }
+
+    animate() {
+        
     }
 }

@@ -26,10 +26,10 @@
 
 <script>
 
-    function getRandomInc(min, max) {
+    function getRandomInt(min, max) {
         min = Math.ceil(min);
         max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min + 1)) + min;
+        return Math.floor(Math.random() * (max - min)) + min;
     }
 
     
@@ -40,7 +40,8 @@
     ctxSize = canv.getCanvasSize()
 
     // ctx.fillStyle = "#3E3E3E";
-    // ctx.fillRect(0, 0, ctxSize.w, ctxSize.h);
+    ctx.fillStyle = "#282828";
+    ctx.fillRect(0, 0, ctxSize.w, ctxSize.h);
     
     
     
@@ -66,19 +67,23 @@
     ctx.fillStyle = '#c15151';
     ctx.lineWidth = 3
     ctx.strokeStyle = "#3E3E3E"
-    // let curve = new CurvePlus(ctx)
-    // curve.generateLinePath(ctxSize)
+    let curve = new CurvePlus(ctx)
+    curve.generateLinePath(ctxSize)
+    // curve.draw()
+    curve.drawing(0.2)
 
     // animation core
     function render() {
-        ctx.clearRect(0,0,ctxSize.w, ctxSize.h)
-        let time = 15
+        ctx.clearRect(0, 0, ctxSize.w, ctxSize.h)
+        let time = ctxSize.w / 100
         block1.animate(time)
         block2.animate(time)
         requestAnimationFrame(render)
     }
 
-    render()
+    // render()
+
+    
     
 
     // ctx.fillRect(40, 20, 50, 100)
