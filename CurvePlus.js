@@ -2,6 +2,7 @@ class CurvePlus{
     constructor(ctx) {
             this.ctx = ctx
             // this.currCoord = {"x": 0, "y": 0}
+            this.animationTime = 0
         }
 
 
@@ -88,7 +89,7 @@ class CurvePlus{
         let angleBorders = [180+20, 0-20],
         curves = getRandomInt(5, 2)
         this.coords = {
-            "x": [getRandomInt(size.w-size.w*0.1, size.w*0.1)],
+            "x": [getRandomInt(size.w-size.w*0.05, size.w*0.05)],
             "y": [0]
         }
         this.angles = []
@@ -139,14 +140,18 @@ class CurvePlus{
     }
 
     drawing(pct) {
+        if (pct >= 1) {
+            this.draw()
+            return false
+        }
         let coords = this.coords
         let fullDistance = this.distances.reduce((prev, curr)=>curr + prev)
         // let currCoord = this.currCoord
         let distance = this.distances[0]
-        console.log(this.distances, fullDistance)
+        // console.log(this.distances, fullDistance)
         // percentage distance
         let pctDistance = fullDistance * pct
-        console.log(pctDistance)
+        // console.log(pctDistance)
         this.ctx.beginPath();
         this.ctx.moveTo(coords.x[0], coords.y[0]);
         for(let i = 0; i < this.distances.length; i++) {
@@ -154,7 +159,7 @@ class CurvePlus{
                 pctDistance = this.distances[i] - (distance - pctDistance)
                 let coord = this.calculateCoordByLine(coords.x[i], coords.y[i], this.angles[i], pctDistance)
                 this.ctx.lineTo(coord.x, coord.y)
-                console.log(pctDistance, i, coord)
+                // console.log(pctDistance, i, coord)
                 
                 break
             } else {
@@ -166,9 +171,12 @@ class CurvePlus{
 
         ctx.stroke();
         // ctx.moveTo(currCoord.x, currCoord.y);
+        return true
     }
 
-    animate() {
-        
+    animate(timeArg) {
+        this.animationTime += timeArg
+        let animationStatus = this.drawing(this.animationTime)
+        return animationStatus
     }
 }

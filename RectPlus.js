@@ -70,11 +70,21 @@ class RectPlus {
                     this.animationFrames[i].achived = 1
                 }
                 // console.log(this)
-                // console.log(this.animationFrames[i])
+                // console.log(this.animationFrames)
                 break
             }
         }
         this.draw()
+
+        let frameCounter = this.animationFrames.length
+        for(let i = 0; i < this.animationFrames.length; i++) {
+            if (this.animationFrames[i].achived == 1) {
+                frameCounter -= 1
+            }
+            if (frameCounter == 0)
+                return false
+        }
+        return true
     }
 
 }
