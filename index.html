@@ -23,6 +23,7 @@
 <script src="CurvePlus.js"></script>
 <script src="MyCanvas.js"></script>
 <script src="RectPlus.js"></script>
+<script src="ArcPlus.js"></script>
 
 <script>
 
@@ -46,14 +47,14 @@
 
     let block1 = new RectPlus(ctx, -1*window.innerWidth/2, 0, window.innerWidth/2, window.innerHeight, "#282828")
     block1.draw()
-    block1.setAnimationFrame({x: 0})
+    block1.setAnimationFrame({x: 0, w: window.innerWidth/2 + 10})
     // block1.setAnimationFrame({x: 0 + 200, y: 200})
     // block1.setAnimationFrame({x: 0 + 300})
     // block1.setAnimationFrame({ w:200, y: 300})
 
     let block2 = new RectPlus(ctx, window.innerWidth, 0, window.innerWidth/2, window.innerHeight, "#282828")
     block2.draw()
-    block2.setAnimationFrame({x: window.innerWidth/2})
+    block2.setAnimationFrame({x: window.innerWidth/2, w: window.innerWidth/2 + 10})
 
     // let l = block1.animate(100.2);
     // block1.animate(100.2);
@@ -93,6 +94,9 @@
         curve.generateLinePath(ctxSize)
         curves.push(curve)
     }
+
+    const arc = new ArcPlus(ctx, 10, 10, 100, 100, "#ff0000")
+    
     
     // curve.draw()
     // curve.drawing(0.2)
@@ -120,6 +124,7 @@
         }
 
         
+        arc.draw()
         requestAnimationFrame(render)
     }
 

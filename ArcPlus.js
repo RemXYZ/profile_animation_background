@@ -12,8 +12,11 @@ class ArcPlus {
     }
 
     draw() {
-        ctx.beginPath();
-        ctx.arc(0, 200, 100, 0, Math.PI * 2)
-        ctx.fill()
+        this.ctx.save();
+        this.ctx.fillStyle = this.color
+        this.ctx.beginPath();
+        this.ctx.arc(0, 200, 100, 0, Math.PI * 2)
+        this.ctx.fill()
+        this.ctx.restore()
     }
 }

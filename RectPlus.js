@@ -12,8 +12,10 @@ class RectPlus {
     }
 
     draw(x = this.x, y = this.y, w = this.w, h = this.h ) {
+        this.ctx.save();
         this.ctx.fillStyle = this.color
         this.rect = this.ctx.fillRect(x, y, w, h)
+        this.ctx.restore();
     }
 
     setAnimationFrame(keyFrame) {
