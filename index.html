@@ -30,61 +30,27 @@
     function getRandomInt(min, max) {
         min = Math.ceil(min);
         max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min)) + min;
+        return Math.round(Math.random() * (max - min)) + min;
     }
-
-    
 
     canv = new MyCanvas("#canvas")
     canv.setCanvasSize()
     let ctx = canv.getCanvas(),
     ctxSize = canv.getCanvasSize()
 
-    // ctx.fillStyle = "#3E3E3E";
-    // ctx.fillStyle = "#282828";
-    // ctx.fillRect(0, 0, ctxSize.w, ctxSize.h);
-    const linesNum = getRandomInt(11, 7)
 
+    // background blocks space
     let block1 = new RectPlus(ctx, -1*window.innerWidth/2, 0, window.innerWidth/2, window.innerHeight, "#282828")
     block1.draw()
     block1.setAnimationFrame({x: 0, w: window.innerWidth/2 + 10})
-    // block1.setAnimationFrame({x: 0 + 200, y: 200})
-    // block1.setAnimationFrame({x: 0 + 300})
-    // block1.setAnimationFrame({ w:200, y: 300})
 
     let block2 = new RectPlus(ctx, window.innerWidth, 0, window.innerWidth/2, window.innerHeight, "#282828")
     block2.draw()
     block2.setAnimationFrame({x: window.innerWidth/2, w: window.innerWidth/2 + 10})
 
-    // let l = block1.animate(100.2);
-    // block1.animate(100.2);
-    // block1.animate(100.2);
-    // block1.animate(100.2);
-    // block1.animate(100.2);
-    // block1.animate(100.2);
-    // block1.animate(100);
-    // block1.animate(100);
-    // block1.animate(100);
-    // block1.animate(100);
-    // block1.animate(100);
-    // block1.animate(100);
-    // block1.animate(100);
-    // block1.animate(100);
-    // block1.animate(100);
-    // block1.animate(100);
-    // block1.animate(100);
-    // block1.animate(100);
-    // block1.animate(100);
-    // block1.animate(100);
-    // block1.animate(100);
-    // block1.animate(100);
-    // block1.animate(100);
-    // block1.animate(100);
-    // block1.animate(98)
-    // block1.animate(100);
-    // let lol = block1.animate(100);
 
-    ctx.fillStyle = '#c15151';
+    //curve space
+    const linesNum = getRandomInt(11, 7)
     ctx.lineWidth = 3
     ctx.strokeStyle = "#3E3E3E"
 
@@ -95,18 +61,13 @@
         curves.push(curve)
     }
 
-    const arc = new ArcPlus(ctx, 10, 10, 100, 100, "#ff0000")
-    
-    
-    // curve.draw()
-    // curve.drawing(0.2)
-    // curve.animate(0.2)
-    // setTimeout(()=>{
-    //     ctx.clearRect(0, 0, ctxSize.w, ctxSize.h)
-    //     curve.animate(0.2)
-    // }, 1000)
-    
-    console.log(curves)
+
+    // arc space
+    const arc = new ArcPlus(ctx, 200, 300, 100, "#ff0000")
+    arc.setAnimationFrame({x:500})
+    let r1 = getRandomInt()
+
+
 
     // animation core
     function render() {
@@ -114,7 +75,10 @@
         let time = ctxSize.w / 80
         let b1Status = block1.animate(time)
         let b2Status = block2.animate(time)
+
         if (b1Status == false && b2Status == false) {
+            time = 1
+            arc.animate(time)
             time = 0.01
             curves.forEach(el=>{
                 let curveStatus = el.animate(time)
@@ -123,22 +87,10 @@
             // console.log(curveStatus)
         }
 
-        
-        arc.draw()
         requestAnimationFrame(render)
     }
 
     render()
-
-    
-    
-
-    // ctx.fillRect(40, 20, 50, 100)
-
-    // ctx.beginPath();
-    // ctx.arc(0, 200, 100, 0, Math.PI * 2)
-    // ctx.fill()
-
     
     
 

@@ -87,7 +87,7 @@ class CurvePlus{
 
     generateLinePath(size) {
         let angleBorders = [180+20, 0-20],
-        curves = getRandomInt(5, 2)
+        curves = getRandomInt(4, 2)
         this.coords = {
             "x": [getRandomInt(size.w-size.w*0.05, size.w*0.05)],
             "y": [0]
