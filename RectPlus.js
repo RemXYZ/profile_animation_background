@@ -3,7 +3,7 @@ class RectPlus {
         this.w = w
         this.h = h
         this.ctx = ctx
-        this.color = color
+        this.color = color.toUpperCase()
         this.x = x
         this.y = y
         
@@ -87,6 +87,12 @@ class RectPlus {
                 return false
         }
         return true
+    }
+
+    animateAlfa() {
+        if (this.color.includes("RGBA")) {
+            console.log("hi")
+        }
     }
 
 }

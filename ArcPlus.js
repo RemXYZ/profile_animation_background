@@ -2,12 +2,13 @@ class ArcPlus {
     constructor(ctx, x, y, r, color) {
         this.r = r
         this.ctx = ctx
-        this.color = color
+        this.color = color.toLowerCase()
         this.x = x
         this.y = y
 
         this.frameKeyWords = ["x","y","r"]
         this.animationFrames = []
+        this.alfaFrame = 0
     }
 
     draw() {
@@ -27,6 +28,10 @@ class ArcPlus {
             }
         })
         let options = {
+            // w: this.w, 
+            // h:this.h, 
+            // x:this.x, 
+            // y:this.y, 
             i: this.animationFrames.length,
             keyLeft: Object.keys(keyFrame).length,
             achived: 0,
@@ -84,5 +89,60 @@ class ArcPlus {
                 return false
         }
         return true
+    }
+
+    setAlfaFrame(coef) {
+        if (coef >= 1) {
+            this.alfaFrame = 1
+            return
+        }
+        this.alfaFrame = coef
+    }
+
+    animateAlfa(time) {
+        if (this.color.includes("rgba")) {
+            let colorCurr = this.color.split(",")
+            let alfa = Number(colorCurr[colorCurr.length - 1].match(/\d*\.?\d+/g))
+            console.log(this.color)
+
+
+            if (alfa == this.alfaFrame) {
+                this.draw()
+                return false
+            }
+            console.log(alfa, this.alfaFrame, time)
+            if (alfa < this.alfaFrame) {
+                console.log(alfa + time > this.alfaFrame)
+                if (alfa + time > this.alfaFrame) {
+                    time = alfa + time - this.alfaFrame
+                }
+                alfa += time
+            }else {
+                if (alfa - time < this.alfaFrame) 
+                        time = alfa - this.alfaFrame
+                alfa -= time
+            }
+            // if (alfa == this.alfaFrame) {
+            //     return false
+            // }
+            // if (alfa > this.alfaFrame) {
+            //     if (alfa - time < 0) 
+            //         time = time - (alfa + time)
+            //     alfa -= time
+            //     console.log(alfa + time < 0)
+            // }else {
+            //     if (alfa + time > this.alfaFrame) 
+            //         time = alfa + time - this.alfaFrame
+                
+            //     alfa += time
+            // }
+            
+
+            console.log(alfa)
+            colorCurr[colorCurr.length - 1] = alfa + ")"
+            this.color = colorCurr.join(",")
+            this.draw()
+            return true
+        }
     }
 }

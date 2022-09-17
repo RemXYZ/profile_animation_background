@@ -37,6 +37,8 @@
     canv.setCanvasSize()
     let ctx = canv.getCanvas(),
     ctxSize = canv.getCanvasSize()
+    let W = window.innerWidth
+    let H = window.innerHeight
 
 
     // background blocks space
@@ -50,39 +52,68 @@
 
 
     //curve space
-    const linesNum = getRandomInt(11, 7)
+    const linesNum = getRandomInt(7, 11)
+    let upendCurv = W >= H ? 0 : 1
     ctx.lineWidth = 3
     ctx.strokeStyle = "#3E3E3E"
 
     const curves = []
     for (let i = 0; i < linesNum; i++) {
         let curve = new CurvePlus(ctx)
-        curve.generateLinePath(ctxSize)
+        curve.generateLinePath(ctxSize, upendCurv)
         curves.push(curve)
     }
+    // let curve = new CurvePlus(ctx)
+    // curve.generateLinePath(ctxSize)
+    // curve.draw()
 
 
-    // arc space
-    const arc = new ArcPlus(ctx, 200, 300, 100, "#ff0000")
-    arc.setAnimationFrame({x:500})
-    let r1 = getRandomInt()
+    // ARC SPACE
+    // for phone size
+    console.log(window.innerHeight)
+    let arcNum = 5
+    let arcSizes = []
+    let arcR = [H * 0.2, H * 0.4]
+    let arcC = []
+    if (window.innerWidth <= 400) {
+        arcR = [H * 0.1]
+    }
 
+    for (let i = 0; i < arcNum; i++) {
+        let cCoef = getRandomInt(25, 34)
+        arcC.push(`rgba(${cCoef}, ${cCoef}, ${cCoef}, 0)`)
+    }
+    console.log(arcC)
+    // const arc1 = new ArcPlus(ctx, W + arcR[0] / 2, 0 - arcR[0], arcR[0], arcC[0])
+    const arc1 = new ArcPlus(ctx, getRandomInt(W*0.92, W), getRandomInt(H*0.02, H*0.08), arcR[0], arcC[0])
+    // arc1.setAnimationFrame({x:getRandomInt(W*0.92, W), y: getRandomInt(H*0.02, H*0.08)})
+    arc1.setAlfaFrame(1)
+
+    // const arc2 = new ArcPlus(ctx, W + arcR[1], H + arcR[1], arcR[1], arcC[1])
+    const arc2 = new ArcPlus(ctx, W*0.6, H*0.5, arcR[1], arcC[1])
+    // arc2.draw()
+    // arc2.setAnimationFrame({x:W*0.6, y: getRandomInt(H*0.5, H*0.5)})
+    arc2.setAlfaFrame(1)
 
 
     // animation core
     function render() {
         ctx.clearRect(0, 0, ctxSize.w, ctxSize.h)
-        let time = ctxSize.w / 80
+        let time = ctxSize.w * 0.02
         let b1Status = block1.animate(time)
         let b2Status = block2.animate(time)
+        
 
         if (b1Status == false && b2Status == false) {
-            time = 1
-            arc.animate(time)
+            time = H / 195
+            // arc1.animate(time)
+            // arc2.animate(time * 3)
             time = 0.01
             curves.forEach(el=>{
                 let curveStatus = el.animate(time)
             })
+            arc1.animateAlfa(0.01)
+            arc2.animateAlfa(0.01)
            
             // console.log(curveStatus)
         }

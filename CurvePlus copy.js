@@ -53,7 +53,7 @@ class CurvePlus{
         // console.log(distanceF, this.curves, i)
         // randomize line distance
         if (i != this.curves - 1) {
-            distanceF = distanceF + getRandomInt(-20, 20) / 100 * distanceF
+            distanceF = distanceF + getRandomInt(20, -20) / 100 * distanceF
         }
         // console.log(distanceF )
         return distanceF;
@@ -73,7 +73,6 @@ class CurvePlus{
         },
         angle = this.calculateRandomAngle(angleBorder),
         distance = this.calculateDistance(angle, size, i);
-        // console.log(angle)
 
         this.angles.push(angle)
         this.distances.push(distance)
@@ -86,21 +85,13 @@ class CurvePlus{
     }
 
 
-    generateLinePath(size, upend) {
-        let upCoef = upend == 1 ? 90 : 0
-        let angleBorders = [0-20 + upCoef, 180+20 + upCoef],
-        curves = getRandomInt(2, 4)
-        console.log(this.coords, size.h * 0.05, size.h - size.h * 0.05)
-        this.coords = upend == 1 ? 
-        {
-            "y": [getRandomInt(size.h*0.05, size.h-size.h*0.05)],
-            "x": [0]
-        }:
-        {
-            "x": [getRandomInt(size.w*0.05, size.w-size.w*0.05)],
+    generateLinePath(size) {
+        let angleBorders = [180+20, 0-20],
+        curves = getRandomInt(4, 2)
+        this.coords = {
+            "x": [getRandomInt(size.w-size.w*0.05, size.w*0.05)],
             "y": [0]
         }
-
         this.angles = []
         this.distances = []
         this.curves = curves
@@ -108,11 +99,11 @@ class CurvePlus{
         // ctx.beginPath();
         // ctx.moveTo(this.coords.x[0],this.coords.y[0]);
 
-        // let coord = this.calculateDotCoord([150 + 90, 30 + 90], size, 0)
+        // let coord = this.calculateDotCoord([100,90], size, 0)
         // this.coords.x.push(coord.x)
         // this.coords.y.push(coord.y)
         // ctx.lineTo(coord.x,coord.y);
-        // coord = this.calculateDotCoord([0 - 20 + 90, 0 - 20 + 90], size, 1)
+        // coord = this.calculateDotCoord([80,30], size, 1)
         // this.coords.x.push(coord.x)
         // this.coords.y.push(coord.y)
         // ctx.lineTo(coord.x,coord.y);
@@ -123,8 +114,8 @@ class CurvePlus{
 
         for(let i = 0; i < curves; i++) {
             //unique angle for start and for end
-            if (i == 0 || i == curves - 1) {  
-                var newAngleBorders = [150 + upCoef, 30 + upCoef]
+            if (i == 0 || i == curves - 1) {
+                var newAngleBorders = [150, 30]
             }
             let coord = this.calculateDotCoord(newAngleBorders, size, i)
             this.coords.x.push(coord.x)
